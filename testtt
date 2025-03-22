@@ -1,0 +1,103 @@
+Vulnerability Description
+The scan reveals the use of weak cipher suites (AES-CBC) and NULL compression in TLS 1.2, which expose the system to known cryptographic attacks.
+
+AES-CBC ciphers are susceptible to BEAST, POODLE, and LUCKY13 attacks, which allow attackers to recover encrypted data by exploiting padding weaknesses.
+NULL compression (if enabled in TLS 1.2) makes the system vulnerable to CRIME attacks, where attackers exploit compressed HTTPS requests to steal sensitive data.
+Although TLS 1.3 does not support these insecure configurations, the presence of these weaknesses in TLS 1.2 can lead to data exposure, MITM (Man-in-the-Middle) attacks, and session hijacking if not mitigated.
+
+Impact
+Man-in-the-Middle (MITM) Attacks – Attackers can decrypt intercepted communications, leading to data leaks.
+Session Hijacking – Exploiting weak ciphers can allow attackers to gain unauthorized access to user sessions.
+Data Exfiltration via Compression Attacks – If TLS compression is enabled, attackers can exploit CRIME attacks to extract sensitive information from encrypted traffic.
+Compliance Risks – Use of weak ciphers may lead to non-compliance with security standards like PCI DSS, HIPAA, and NIST.
+
+
+Remediation
+✅ Disable AES-CBC ciphers in TLS 1.2:
+
+Use only AES-GCM and ChaCha20-Poly1305, which offer stronger encryption.
+Update the TLS configuration to exclude CBC-based cipher suites.
+✅ Disable TLS Compression (if enabled):
+
+Ensure TLSCompression is disabled in the server configuration to prevent CRIME attacks.
+✅ Prefer TLS 1.3 over TLS 1.2:
+
+Enforce TLS 1.3 for all secure communications.
+Restrict TLS 1.2 usage to modern, secure ciphers.
+✅ Regular Security Audits:
+
+Continuously scan and update cryptographic configurations to comply with security best practices.
+
+
+
+
+
+Vulnerability: Weak Authentication for Sensitive Account Modifications
+Description:
+The web application allows users to change sensitive account details (such as email and profile information) without requiring multi-factor authentication (MFA) or a memorable phrase. This weak authentication mechanism introduces a security risk where attackers, if they gain access to a user's account, can modify critical information without any additional verification.
+
+Impact:
+Account Takeover – Attackers who obtain valid credentials (via phishing, credential stuffing, or brute force attacks) can change the registered email and lock out the legitimate user.
+Identity Theft – Unauthorized users may alter personal information, enabling fraudulent activities.
+Regulatory Non-Compliance – Violates security best practices and compliance standards such as PCI-DSS, NIST, and ISO 27001, which require strong authentication for sensitive actions.
+Loss of User Trust – Users may lose confidence in the platform if unauthorized changes to their accounts go unnoticed or unchallenged.
+
+Lack of MFA for sensitive changes increases the risk of account takeovers.
+Attackers can modify user emails to lock out legitimate users permanently.
+Compliance violations with PCI-DSS, NIST, and GDPR increase regulatory risks
+
+Remediation:
+✅ Enforce MFA or a memorable phrase before allowing changes to critical enpoints such as account details (email, password, phone number, etc.).
+✅ Implement Email Verification – Require confirmation via the old email before updating to a new one.
+✅ Restrict Profile Modifications – Implement additional authentication checks (such as OTP or security questions) before updating personal details.
+✅ Audit & Log Changes – Log all account modifications with timestamps and IP addresses to track suspicious activities.
+✅ Comply with Security Standards – Follow PCI-DSS Requirement 8.3 & 8.5.1, which mandate strong authentication for access and modifications to sensitive data.
+
+
+Vulnerability: Insecure Exposure of Sensitive User Information in Web Application
+Description:
+A transaction-based web application is exposing sensitive user information (such as email IDs, names, account numbers, addresses, and phone numbers) after authentication in response to web requests. This issue allows any authenticated user to view personal information without additional security controls, leading to data leakage and potential regulatory non-compliance.
+
+Even though the user is authenticated, displaying sensitive personal data openly in the application increases the risk of unauthorized access, session hijacking, and data harvesting by malicious actors through techniques like cross-site scripting (XSS), session fixation, or Man-in-the-Middle (MitM) attacks.
+Impact:
+Data Privacy Violation
+
+Exposing PII without encryption or access restrictions violates PCI-DSS and GDPR compliance.
+Attackers could harvest user information for phishing attacks and social engineering.
+Account Takeover (ATO) Risk
+
+If attackers gain access to personal details, they can attempt password resets, identity fraud, or financial fraud in transaction-based applications.
+Regulatory & Compliance Violations
+
+Violates PCI-DSS Requirement 6.5.5 (preventing information leakage).
+May result in legal penalties if PII is leaked under GDPR, CCPA, or other data protection laws.
+Increased Attack Surface
+
+Data exposure allows attackers to enumerate user accounts, leading to brute force attacks or targeted exploits against specific users.
+Remediation & Mitigation:
+✅ 1. Implement Data Masking
+
+Hide sensitive details in the UI (e.g., mask email IDs: u***@domain.com and phone numbers: XXX-XXX-1234).
+✅ 2. Enforce Role-Based Access Control (RBAC)
+
+Ensure that only authorized users (e.g., admin or account holder) can view or modify sensitive information.
+✅ 3. Encrypt Data in Transit and at Rest
+
+Use TLS 1.3 for secure data transmission.
+Encrypt stored user data using AES-256 to prevent unauthorized access.
+✅ 4. Implement Session Security & Re-authentication
+
+Require Multi-Factor Authentication (MFA) before allowing users to update critical details like email or phone numbers.
+Enforce session expiration and secure cookie attributes (HttpOnly, Secure, SameSite).
+✅ 5. Prevent Unauthorized Information Disclosure
+
+Avoid exposing account numbers, PII, or transaction details directly on web pages.
+Use tokenized identifiers instead of displaying raw data.
+✅ 6. Monitor and Log Data Access
+
+Enable logging for all user profile views, edits, and sensitive data retrievals.
+Set up real-time alerts for unusual access patterns.
+
+
+.
+
