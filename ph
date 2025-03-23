@@ -174,6 +174,58 @@ Restart the application to apply the changes:
 
 mvn spring-boot:run   # If using Maven
 ./gradlew bootRun     # If using Gradle
+
+
+Vulnerability Description:
+The file stored on the blob storage is publicly accessible and can be downloaded without any authentication or authorization. This means that anyone with the URL to the blob can access and download the file, regardless of whether they are authorized to do so. This is a significant security risk, especially if the file contains sensitive or confidential information.
+
+Impact:
+Data Exposure: Sensitive or confidential data stored in the blob can be accessed by unauthorized users, leading to potential data breaches.
+
+Data Integrity: Unauthorized users may modify or delete the file, leading to data integrity issues.
+
+Compliance Violations: If the file contains personally identifiable information (PII), financial data, or other regulated information, this could lead to violations of compliance standards such as GDPR, HIPAA, or PCI-DSS.
+
+Reputation Damage: A data breach or unauthorized access to sensitive information can damage the organization's reputation and erode customer trust.
+
+Remediation:
+Enable Authentication and Authorization:
+
+Configure the blob storage to require authentication for access. This can be done using Shared Access Signatures (SAS) or by setting up Azure Active Directory (AAD) authentication.
+
+Ensure that only authorized users or applications have access to the blob storage.
+
+Set Proper Access Controls:
+
+Use Role-Based Access Control (RBAC) to restrict access to the blob storage. Assign roles such as "Storage Blob Data Reader" or "Storage Blob Data Contributor" only to those who need access.
+
+Limit access to specific IP addresses or virtual networks if possible.
+
+Use Private Endpoints:
+
+Configure private endpoints for the blob storage to ensure that it is only accessible within your virtual network, reducing the risk of external access.
+
+Enable Encryption:
+
+Ensure that data at rest is encrypted using Azure Storage Service Encryption (SSE). This adds an additional layer of security in case the data is accessed without authorization.
+
+Audit and Monitor Access:
+
+Enable logging and monitoring for the blob storage to track access and detect any unauthorized attempts to access the data.
+
+Use Azure Monitor and Azure Security Center to set up alerts for suspicious activities.
+
+Regular Security Reviews:
+
+Conduct regular security reviews and audits of your storage accounts to ensure that access controls are properly configured and that no sensitive data is exposed.
+
+Educate and Train Staff:
+
+Ensure that your team is aware of the importance of securing blob storage and follows best practices for data security.
+
+By implementing these remediation steps, you can significantly reduce the risk of unauthorized access to your blob storage and protect sensitive data from exposure.
+
+
 🔹 Verification
 After configuring, verify using nmap:
 
