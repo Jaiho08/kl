@@ -65,3 +65,25 @@ Remediation:
 Disable the TRACE Method:
 
 Configure your web server to disable the TRACE method
+
+
+
+
+Vulnerability Description:
+Directory listing is a web server configuration issue where the server displays the contents of a directory (e.g., an image directory) when no default file (e.g., index.html) is present. This allows anyone accessing the directory URL to view and download all files within that directory, including sensitive or private images. If the directory contains sensitive or confidential files, this can lead to unauthorized access and data exposure.
+
+Impact:
+Information Disclosure: Attackers or unauthorized users can view and download files from the directory, potentially exposing sensitive or confidential information.
+
+Data Theft: Sensitive images, such as personal photos, proprietary graphics, or internal documents, can be stolen and misused.
+
+Reputation Damage: If sensitive or private images are leaked, it can harm the organization's reputation and erode user trust.
+
+Increased Attack Surface: Directory listings can reveal file names, directory structures, and other information that attackers can use to plan further attacks, such as exploiting vulnerable files or scripts.
+
+Compliance Violations: If the directory contains personally identifiable information (PII) or other regulated data, this could lead to violations of compliance standards such as GDPR, HIPAA, or PCI-DSS.
+
+Remediation:
+Disable Directory Listing:
+
+Configure the web server to disable directory listing. This can be done by modifying the server configuration file.
