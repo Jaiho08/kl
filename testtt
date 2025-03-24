@@ -1,3 +1,93 @@
+Findings & Impact
+1. Use of CBC-Mode Ciphers in TLS 1.2
+Description: The server supports TLS 1.2 cipher suites using CBC (Cipher Block Chaining) mode (e.g., TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384). While these ciphers are not inherently broken, they are susceptible to theoretical attacks like Lucky13 (timing-based padding oracle attacks) if misconfigured.
+
+Impact:
+
+Low risk in practice (modern mitigations exist).
+
+Potential for decryption attacks if server misconfiguration exists.
+
+CVSS Score: 5.9 (Medium) – AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N
+
+2. XML Parsing Issue in /evox/about Endpoint
+Description: Nmap’s http-trane-info script detected a problem with XML parsing at /evox/about. This could indicate:
+
+A misconfigured XML API.
+
+A potential XXE (XML External Entity) injection vulnerability if user-supplied XML is processed.
+
+Impact:
+
+If exploitable, could lead to XXE attacks (file disclosure, SSRF, or DoS).
+
+Requires manual verification to confirm risk.
+
+CVSS Score: 7.5 (High) – If XXE is confirmed: AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N
+
+3. Duplicate TLS 1.3 Cipher Entries (Minor Glitch)
+Description: The scan shows duplicate TLS 1.3 cipher entries (e.g., TLS_AKE_WITH_AES_128_GCM_SHA256 listed twice).
+
+Impact:
+
+Likely a reporting issue (no security impact).
+
+Could indicate a misconfiguration in cipher prioritization.
+
+Remediation Steps
+1. Disable CBC-Mode Ciphers in TLS 1.2 (Recommended)
+Action: Modify the TLS configuration to prefer AEAD ciphers (AES-GCM, ChaCha20-Poly1305) and disable CBC-mode in TLS 1.2.
+
+Akamai-Specific Fix:
+
+Navigate to Property Manager → Modify the relevant edge hostname.
+
+Under TLS settings, enforce:
+
+Copy
+TLS 1.2 + 1.3 only  
+Preferred Ciphers: ECDHE-RSA-AES128-GCM-SHA256, ECDHE-RSA-AES256-GCM-SHA384, ECDHE-RSA-CHACHA20-POLY1305  
+Disable CBC ciphers (e.g., AES256-SHA, AES128-SHA256).
+
+2. Investigate /evox/about XML Parsing Issue
+Action:
+
+Manually test the endpoint for XXE vulnerabilities (e.g., inject malicious XML entities).
+
+If vulnerable:
+
+Disable DTD processing in XML parser.
+
+Use a secure XML library (e.g., libxml2 with XML_PARSE_NOENT disabled).
+
+Implement input validation for XML payloads.
+
+3. Verify TLS 1.3 Cipher Suite Configuration
+Action:
+
+Check Akamai/backend server settings to ensure no duplicate cipher entries.
+
+Ensure TLS 1.3 is prioritized over TLS 1.2 for optimal security.
+
+Final Notes
+Overall Risk: Medium (No critical flaws, but minor hardening opportunities).
+
+Akamai’s Default Security: Most risks are mitigated by Akamai’s infrastructure.
+
+Next Steps:
+
+Confirm XML issue via manual testing.
+
+Adjust TLS settings if strict compliance (e.g., PCI-DSS) is required.
+
+Would you like a proof-of-concept (PoC) test for the XML issue?
+
+New chat
+Message DeepSeek
+
+
+
+
 Vulnerability Description
 The scan reveals the use of weak cipher suites (AES-CBC) and NULL compression in TLS 1.2, which expose the system to known cryptographic attacks.
 
