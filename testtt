@@ -32,28 +32,25 @@ Continuously scan and update cryptographic configurations to comply with securit
 
 
 
-Vulnerability: Weak Authentication for Sensitive Account Modifications
+Vulnerability: Weak Authentication for Sensitive Account Changes
 Description:
-The web application allows users to change sensitive account details (such as email and profile information) without requiring multi-factor authentication (MFA) or a memorable phrase. This weak authentication mechanism introduces a security risk where attackers, if they gain access to a user's account, can modify critical information without any additional verification.
+The application allows users to change sensitive account details, such as email or profile information, without requiring additional authentication, such as Multi-Factor Authentication (MFA), Two-Factor Authentication (2FA), or a memorable phrase. This introduces a security risk where an attacker, who has obtained the user's credentials (via phishing, brute force, or credential stuffing), can modify key account information without further verification.
+
+Additionally, if the application does not require the user to re-enter their existing password before making changes, it further weakens security, as an attacker with session access could modify details without needing any credentials.
 
 Impact:
-Account Takeover – Attackers who obtain valid credentials (via phishing, credential stuffing, or brute force attacks) can change the registered email and lock out the legitimate user.
-Identity Theft – Unauthorized users may alter personal information, enabling fraudulent activities.
-Regulatory Non-Compliance – Violates security best practices and compliance standards such as PCI-DSS, NIST, and ISO 27001, which require strong authentication for sensitive actions.
-Loss of User Trust – Users may lose confidence in the platform if unauthorized changes to their accounts go unnoticed or unchallenged.
-
-Lack of MFA for sensitive changes increases the risk of account takeovers.
-Attackers can modify user emails to lock out legitimate users permanently.
-Compliance violations with PCI-DSS, NIST, and GDPR increase regulatory risks
-
+Account Takeover (ATO): An attacker who gains access to the user's session or login credentials can change the email address, allowing them to reset the password and lock out the legitimate user.
+Identity Fraud: Users' personal information can be altered without proper verification, leading to identity fraud and potential financial loss.
+Non-Compliance with Security Standards: Failing to implement strong authentication violates industry regulations such as PCI-DSS, NIST, and ISO 27001, which require MFA for sensitive transactions.
+Session Hijacking Exploitation: If an attacker hijacks a session, they can alter account details without needing the user's password, leading to further security risks.
 Remediation:
-✅ Enforce MFA or a memorable phrase before allowing changes to critical enpoints such as account details (email, password, phone number, etc.).
-✅ Implement Email Verification – Require confirmation via the old email before updating to a new one.
-✅ Restrict Profile Modifications – Implement additional authentication checks (such as OTP or security questions) before updating personal details.
-✅ Audit & Log Changes – Log all account modifications with timestamps and IP addresses to track suspicious activities.
-✅ Comply with Security Standards – Follow PCI-DSS Requirement 8.3 & 8.5.1, which mandate strong authentication for access and modifications to sensitive data.
+✅ Require Re-authentication: Users must re-enter their current password before making any changes to sensitive account information (such as email updates).
+✅ Enforce MFA/2FA: Before modifying sensitive data, the system should prompt for MFA verification (e.g., OTP, authenticator app, or security key).
+✅ Implement Memorable Phrase Verification: If MFA is not available, require the user to verify a memorable phrase before allowing account modifications.
+✅ Confirm Email Change: Send a verification link to the old email before updating to a new email to prevent unauthorized changes.
+✅ Log and Monitor Account Changes: Maintain audit logs for any account modifications and alert users of suspicious activity.
 
-
+By implementing these security controls, the application can prevent unauthorized changes, mitigate the risk of account takeovers, and align with PCI-DSS security requirements
 Vulnerability: Insecure Exposure of Sensitive User Information in Web Application
 Description:
 A transaction-based web application is exposing sensitive user information (such as email IDs, names, account numbers, addresses, and phone numbers) after authentication in response to web requests. This issue allows any authenticated user to view personal information without additional security controls, leading to data leakage and potential regulatory non-compliance.
