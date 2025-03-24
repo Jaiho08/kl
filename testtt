@@ -113,5 +113,26 @@ Remediation:
 ✅ Implement an email confirmation process that requires verification via the old email before completing the change.
 ✅ Log all sensitive account modifications and alert users when a change occurs.
 ✅ Monitor for suspicious activity, such as frequent profile changes, and implement risk-based authentication (RBA).
+
+
+Issue: Unmasked Account Number Post-Authentication
+Description:
+Displaying a full unmasked account number after authentication in a web application can lead to data exposure risks. Even though the user is authenticated, full account numbers should still be masked to prevent shoulder surfing, unauthorized access, or potential data leaks due to screen capture or browser exploits.
+
+Impact:
+Shoulder Surfing Risk: If a user accesses their account in a public or shared environment, an attacker can easily view or take pictures of the full account number.
+Data Leakage: If the application is vulnerable to cross-site scripting (XSS) or other browser-based attacks, attackers may extract sensitive financial information.
+Compliance Violation (PCI-DSS, GDPR, ISO 27001):
+PCI-DSS Requirement 3.3 mandates that PAN (Primary Account Number) must be masked when displayed.
+GDPR considers financial data as personal information, which requires adequate protection.
+Phishing & Social Engineering Risks: If attackers gain access to account numbers, they can impersonate banks or financial institutions for fraudulent activities.
+Remediation:
+✅ Mask account numbers post-authentication, displaying only the last 4 digits (e.g., XXXX-XXXX-XXXX-1234).
+✅ Require user verification (such as OTP or MFA) for revealing the full account number when necessary.
+✅ Log and monitor account number access requests for suspicious activity.
+✅ Ensure secure transmission (TLS 1.2/1.3) and implement content security policies (CSP) to mitigate browser-based attacks.
+
+Conclusion:
+Displaying unmasked account numbers post-authentication is a security weakness and a compliance risk. Proper masking and additional authentication should be enforced to prevent data exposure.
 .
 
