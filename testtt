@@ -95,6 +95,23 @@ Use tokenized identifiers instead of displaying raw data.
 Enable logging for all user profile views, edits, and sensitive data retrievals.
 Set up real-time alerts for unusual access patterns.
 
+Vulnerability: Weak Authentication with no email confirmation for any change in profile
+Description:
+The application allows users to change sensitive account details, such as their email or profile information, without requiring multi-factor authentication (MFA), a memorable phrase, or even the existing password. This introduces a significant security risk, as unauthorized users who have obtained login credentials can modify account details without additional verification.
 
+Additionally, the system does not enforce email confirmation when an email address is changed, making it easier for attackers to hijack accounts by altering contact information without user approval.
+
+Impact:
+Account Takeover (ATO): An attacker with stolen credentials can change the email address and lock out the legitimate user, leading to potential fraud or unauthorized access.
+Identity Theft & Phishing Risks: A malicious user can modify profile details to impersonate a legitimate user, leading to social engineering attacks.
+Non-Compliance with Security Standards (PCI-DSS, NIST, ISO 27001): Failure to implement MFA for sensitive changes violates industry regulations, potentially leading to compliance penalties.
+Lack of Accountability: Without requiring the existing password or email confirmation, legitimate users have no control over unauthorized modifications.
+Weak Security Controls: Without additional authentication steps, brute force or credential stuffing attacks become more effective in gaining persistent access.
+Remediation:
+✅ Require MFA (2FA) or a memorable phrase before allowing changes to sensitive account details.
+✅ Mandate entering the existing password before updating key information (e.g., email, phone number).
+✅ Implement an email confirmation process that requires verification via the old email before completing the change.
+✅ Log all sensitive account modifications and alert users when a change occurs.
+✅ Monitor for suspicious activity, such as frequent profile changes, and implement risk-based authentication (RBA).
 .
 
