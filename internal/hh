@@ -120,3 +120,70 @@ Don’t leave Nginx listening on open ports with default behavior (e.g., 80 or 8
 🧪 Bonus: Detection Tips
 
 
+Missing Security Headers in HTTP Response
+📄 Description
+The HTTP response from the server is missing several critical security headers that help protect users from common web-based attacks such as Cross-Site Scripting (XSS), clickjacking, and content sniffing. These headers are not just best practices—they’re essential for reducing attack surface on the client side.
+
+
+Impact
+Without these headers:
+XSS Attacks are more likely:
+
+No Content-Security-Policy means the browser does not restrict scripts to trusted sources.
+
+Clickjacking Risk:
+
+No X-Frame-Options allows the page to be embedded in iframes, enabling clickjacking attacks.
+
+MIME-type Sniffing:
+
+Without X-Content-Type-Options: nosniff, the browser might interpret files as a different type, allowing malicious files to be executed.
+
+Information Leakage:
+
+Missing Referrer-Policy can expose sensitive URLs to third parties when users navigate away.
+
+Lack of Transport Security Enforcement:
+
+No Strict-Transport-Security (HSTS) means attackers can attempt SSL stripping attacks.
+
+Excessive Browser Access to Features:
+
+No Permissions-Policy allows full access to camera, microphone, geolocation, etc., by default.
+
+ Recommendations
+Add the following headers to your Nginx or Apache configuration or via application-level middleware (e.g., Express.js, Django, Spring):
+
+http
+Copy
+Edit
+# Prevent XSS and limit scripts
+Content-Security-Policy: default-src 'self';
+
+# Prevent clickjacking
+X-Frame-Options: DENY
+
+# Prevent MIME-type sniffing
+X-Content-Type-Options: nosniff
+
+# Enforce HTTPS
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+# Protect referral info
+Referrer-Policy: no-referrer
+
+# Restrict browser features
+Permissions-Policy: camera=(), microphone=(), geolocation=()
+📌 Bonus: Nginx Configuration Example
+nginx
+Copy
+Edit
+add_header Content-Security-Policy "default-src 'self';";
+add_header X-Frame-Options "DENY";
+add_header X-Content-Type-Options "nosniff";
+add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+add_header Referrer-Policy "no-referrer";
+add_header Permissions-Policy "camera=(), microphone=(), geolocation=()";
+
+
+ 
