@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+  <!-- Visible graphic -->
+  <rect width="100" height="100" rx="10" fill="#0176d3"/>
+  <text x="50" y="30" font-family="Arial" font-size="8" text-anchor="middle" fill="white">Salesforce</text>
+  <text x="50" y="45" font-family="Arial" font-size="6" text-anchor="middle" fill="white">Preview</text>
+  
+  <script type="text/javascript">
+    //<![CDATA[
+      (function() {
+        try {
+          // Function to display token status
+          function checkTokens() {
+            var tokens = {
+              dashboard: localStorage.getItem('$AuraClientService.token$desktopDashboards:dashboardApp'),
+              reports: localStorage.getItem('$AuraClientService.token$reports:lightningReportApp')
+            };
+            
+            // Create output element
+            var output = document.createElementNS("http://www.w3.org/2000/svg", "foreignObject");
+            output.setAttribute("x", "10");
+            output.setAttribute("y", "55");
+            output.setAttribute("width", "80");
+            output.setAttribute("height", "40");
+            
+            var html = '<div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Arial;font-size:6px;color:white;text-align:center;">';
+            
+            if (tokens.dashboard) {
+              html += '<div style="margin-bottom:2px;color:lime;">✓ Dashboard Token</div>';
+              console.log('Dashboard Token:', tokens.dashboard);
+            }
+            
+            if (tokens.reports) {
+              html += '<div style="margin-bottom:2px;color:lime;">✓ Reports Token</div>';
+              console.log('Reports Token:', tokens.reports);
+            }
+            
+            if (!tokens.dashboard && !tokens.reports) {
+              html += '<div style="color:yellow;">No tokens found</div>';
+            }
+            
+            html += '</div>';
+            output.innerHTML = html;
+            document.documentElement.appendChild(output);
+          }
+          
+          // Try multiple times to ensure it works in preview mode
+          checkTokens();
+          setTimeout(checkTokens, 800);
+          setTimeout(checkTokens, 2000);
+          
+        } catch(e) {
+          console.error("Error accessing localStorage:", e);
+          var error = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          error.setAttribute("x", "50");
+          error.setAttribute("y", "70");
+          error.setAttribute("font-family", "Arial");
+          error.setAttribute("font-size", "5");
+          error.setAttribute("text-anchor", "middle");
+          error.setAttribute("fill", "red");
+          error.textContent = "Access Error";
+          document.documentElement.appendChild(error);
+        }
+      })();
+    //]]>
+  </script>
+</svg>
