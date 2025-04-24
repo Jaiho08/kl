@@ -1,1 +1,12 @@
-foo bar
+Insecure Storage of Aura Tokens
+
+📝 Description:
+Salesforce Aura framework tokens are being stored in the browser's local storage. Local storage is accessible via JavaScript and lacks built-in security features like HttpOnly or Secure flags. This makes it vulnerable to cross-site scripting (XSS) attacks.
+
+⚠️ Impact:
+An attacker exploiting an XSS vulnerability could steal the stored token, impersonate a legitimate user, gain unauthorized access to Salesforce data, and potentially perform malicious actions on behalf of the user.
+
+✅ Recommendation:
+Avoid storing sensitive tokens like Aura tokens in local storage.
+
+Use secure cookies and proper session handling instead
