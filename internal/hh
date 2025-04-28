@@ -1,10 +1,29 @@
-https://<iframe src="https://judge.me/DwRBR5Jl?tab=public_profile">
+Improper Email Domain Enforcement in Profile Update
 
-https://secure.gravatar.com/avatar/c4785f36bd80e94abc604b4f92cbdd31.png'; onload=alert("selfXSS")>
+📝 Description:
+The application allows authenticated users to change their registered business email address to any public domain email (e.g., Gmail, Yahoo) via the profile update functionality without validating the domain. After changing to a public email address, all application notifications — including follower comments, post activity, and possibly sensitive interactions — are redirected to the unauthorized external email account, outside the organization's trusted environment.
 
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200">
-<image height="30" width="30" xlink:href="/lib/plymouth/ubuntu_logo.png" />
-<image height="30" width="30" xlink:href="http://<EXAMPLE_SERVER>:999/example.png" />
-<text x="0" y="20" font-size="20">test</text>
-</svg>
+⚠️ Impact:
+Malicious users can exfiltrate sensitive communication by updating their email to a public domain.
+
+Notifications containing follower comments, post updates, or other sensitive information are delivered to an external Gmail account.
+
+Potential for account hijacking using external email password recovery.
+
+Violation of internal security policies and increased risk of data leakage.
+
+Loss of visibility and control over corporate communication channels.
+
+Increased risk of phishing or impersonation attacks.
+
+✅ Recommendation:
+Restrict email changes to whitelisted, approved business/vendor domains (e.g., @company.com, @vendorpartner.com).
+
+Enforce validation checks during email updates at both frontend and backend layers.
+
+Send alerts to security/admin teams when email changes occur, especially when switching to unapproved domains.
+
+Block notification delivery to unverified or public email addresses until approval.
+
+Implement a manual approval process if exceptions for public emails are ever needed.
+
