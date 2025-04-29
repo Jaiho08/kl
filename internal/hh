@@ -1,1 +1,40 @@
-foo bar
+The application sets cookies in HTTP responses without consistently applying critical security attributes. Analysis of various HTTP responses reveals that:
+
+Some cookies are missing the HttpOnly flag, allowing them to be accessed via JavaScript, increasing the risk of token theft via XSS.
+
+Other cookies lack the Secure flag, meaning they could be transmitted over unencrypted HTTP connections, exposing them to interception (e.g., man-in-the-middle attacks).
+
+This inconsistency across different requests indicates an incomplete or misconfigured cookie handling policy, which weakens the overall session security model.
+
+ Impact:
+Session Hijacking: Cookies without HttpOnly can be stolen via XSS.
+
+Man-in-the-Middle Attacks (MitM): Cookies without the Secure flag may be transmitted over plaintext HTTP, making them vulnerable to interception.
+
+Non-compliance: Violates OWASP Secure Coding Guidelines and may raise red flags in security audits.
+
+
+  Recommendation:
+Set the HttpOnly Flag
+
+Prevents client-side scripts from accessing sensitive cookies.
+
+
+
+
+Set-Cookie: sessionId=abc123; HttpOnly
+Set the Secure Flag
+
+Ensures cookies are only sent over HTTPS connections.
+
+
+Set-Cookie: sessionId=abc123; Secure
+Combine with SameSite Attribute
+
+Adds protection against Cross-Site Request Forgery (CSRF).
+
+
+Set-Cookie: sessionId=abc123; HttpOnly; Secure; SameSite=Strict
+Apply to All Sensitive Cookies:
+
+Include session, authentication, and any other cookie that handles sensitive or stateful information.
