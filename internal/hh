@@ -1,40 +1,20 @@
-The application sets cookies in HTTP responses without consistently applying critical security attributes. Analysis of various HTTP responses reveals that:
+ChatGPT said:
+Sure! Here's a concise vulnerability report format for your case:
 
-Some cookies are missing the HttpOnly flag, allowing them to be accessed via JavaScript, increasing the risk of token theft via XSS.
+🔓 Vulnerability Title:
+Insecure Storage of Aura Tokens
 
-Other cookies lack the Secure flag, meaning they could be transmitted over unencrypted HTTP connections, exposing them to interception (e.g., man-in-the-middle attacks).
+📝 Description:
+Salesforce Aura framework tokens are being stored in the browser's local storage. Local storage is accessible via JavaScript and lacks built-in security features like HttpOnly or Secure flags. This makes it vulnerable to cross-site scripting (XSS) attacks.
 
-This inconsistency across different requests indicates an incomplete or misconfigured cookie handling policy, which weakens the overall session security model.
+⚠️ Impact:
+An attacker exploiting an XSS vulnerability could steal the stored token, impersonate a legitimate user, gain unauthorized access to Salesforce data, and potentially perform malicious actions on behalf of the user.
 
- Impact:
-Session Hijacking: Cookies without HttpOnly can be stolen via XSS.
+✅ Recommendation:
+Avoid storing sensitive tokens like Aura tokens in local storage.
 
-Man-in-the-Middle Attacks (MitM): Cookies without the Secure flag may be transmitted over plaintext HTTP, making them vulnerable to interception.
+Use secure, HttpOnly, and Secure cookies for session/token storage.
 
-Non-compliance: Violates OWASP Secure Coding Guidelines and may raise red flags in security audits.
+Implement strong Content Security Policies (CSP) and sanitize all user inputs to prevent XSS.
 
-
-  Recommendation:
-Set the HttpOnly Flag
-
-Prevents client-side scripts from accessing sensitive cookies.
-
-
-
-
-Set-Cookie: sessionId=abc123; HttpOnly
-Set the Secure Flag
-
-Ensures cookies are only sent over HTTPS connections.
-
-
-Set-Cookie: sessionId=abc123; Secure
-Combine with SameSite Attribute
-
-Adds protection against Cross-Site Request Forgery (CSRF).
-
-
-Set-Cookie: sessionId=abc123; HttpOnly; Secure; SameSite=Strict
-Apply to All Sensitive Cookies:
-
-Include session, authentication, and any other cookie that handles sensitive or stateful information.
+Ensure tokens have short lifespans and support automatic expiration and renewal.
