@@ -1,1 +1,107 @@
-foo bar
+# IBM SPHERE Critical Endpoints List
+
+## Authentication
+/auth/login
+/auth/logout
+/oauth2/token
+/saml/login
+/api/auth
+/identity/connect/token
+
+## Administration
+/admin/console
+/admin/users
+/admin/roles
+/admin/config
+/admin/audit
+/admin/backup
+
+## API Endpoints
+/api/v1/users
+/api/v2/config
+/rest/system
+/graphql
+/soap/service
+/jsonrpc
+
+## Configuration
+/config/security
+/config/database
+/config/network
+/config/ldap
+/config/smtp
+
+## Data Operations
+/data/export
+/data/import
+/data/query
+/data/search
+/data/backup
+
+## System Management
+/system/restart
+/system/update
+/system/logs
+/system/diagnostics
+/system/license
+
+## File Operations
+/file/upload
+/file/download
+/file/delete
+/file/share
+
+## Monitoring
+/health
+/metrics
+/status
+/diagnostics
+/logs
+
+## Database Access
+/db/query
+/db/admin
+/db/backup
+/db/restore
+
+## Cluster Management
+/cluster/nodes
+/cluster/config
+/cluster/status
+/cluster/failover
+
+## Security
+/security/certs
+/security/keys
+/security/policies
+/security/audit
+
+## Backup/Restore
+/backup/full
+/backup/incremental
+/restore/point
+/restore/verify
+
+## Virtualization
+/vm/create
+/vm/delete
+/vm/migrate
+/vm/snapshot
+
+## Cloud Services
+/cloud/storage
+/cloud/deploy
+/cloud/config
+/cloud/migrate
+
+## Network
+/network/firewall
+/network/routing
+/network/dns
+/network/vpn
+
+## Important Files
+/WEB-INF/web.xml
+/META-INF/context.xml
+/.env
+/config.json
